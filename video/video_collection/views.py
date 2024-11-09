@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from .forms import VideoForm
+from django.db.models.functions import Lower
+from .forms import VideoForm, SearchForm
 from .models import Video
 
 
@@ -34,5 +35,15 @@ def add(request):
     return render(request, 'video_collection/add.html', { 'new_video_form': new_video_form})
 
 def video_list(request):
-    videos = Video.objects.all()
-    return render(request, 'video_collection/video_list.html', { 'videos': videos})
+
+    search_form = SearchForm(request.GET) # build form from data user has sent to app
+
+    if search_form.is_valid():
+        search_term = search_form.cleaned_data['search_term'] # same field as found in forms.py, example: 'yoga' or 'squats'
+        videos = Video.objects.filter(name__icontains=search_term).order_by(Lower('name'))
+
+    else: # form is not filled in or this is the first time the user sees the page
+        search_form = SearchForm()
+        videos = Video.objects.order_by(Lower('name'))
+
+    return render(request, 'video_collection/video_list.html', { 'videos': videos, 'search_form': search_form})

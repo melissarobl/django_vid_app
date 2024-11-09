@@ -11,7 +11,12 @@
         {% block content %}
         {% endblock %}
 
+        <hr>
+    <div class="navigation">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'video_list' %}">Video List</a>
+        <a href="{% url 'add_video' %}">Add Video</a>
+    </div>
+
     </body>
-
-
 </html>
