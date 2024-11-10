@@ -10,3 +10,11 @@ body {
     color: lightcoral;
     padding-right: 30px;
 }
+
+.details_button {
+    background-color: goldenrod;
+}
+
+.video_list_link {
+    color: lightseagreen;
+}

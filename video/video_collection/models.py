@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 
 
+
 # Create your models here. These are the items with input fields on your form/view
 
 class Video(models.Model):
