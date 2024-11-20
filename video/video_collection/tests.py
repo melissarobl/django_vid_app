@@ -119,8 +119,6 @@ class TestVideoList(TestCase):
 
 class TestVideoSearch(TestCase):
 
-
-
     def test_video_search_matches(self):
         v1 = Video.objects.create(name='ABC', notes='example', url='https://www.youtube.com/watch?v=456')
         v2 = Video.objects.create(name='nope', notes='example', url='https://www.youtube.com/watch?v=789')
@@ -195,4 +193,29 @@ class TestVideoModel(TestCase):
         self.assertEqual(0, Video.objects.count())
 
 
+class TestVideoDetails(TestCase):
+
+    def setUp(self):
+        video = Video.objects.create(name='example', url='https://www.youtube.com/watch?v=YYgYRSkFoJs', notes = 'test notes',) # set up example dictionary info
+
+    def test_verify_page_shows_all_information_on_one_video_if_exists(self):
+        video_1 = Video.objects.get(pk=1)  # get video object with pk of 1
+
+        response = self.client.get(reverse('video_details', kwargs={'video_pk':1})) # get request to video_details page for video with pk 1
+
+        self.assertTemplateUsed(response, 'video_collection/video_details.html') # make sure the video_details template was used
+
+        # what data was sent to the template?
+        data_rendered = response.context['video']
+        self.assertEqual(data_rendered, video_1)
+
+        # assert the following is shown on the page displayed:
+        self.assertContains(response, 'test notes')
+        self.assertContains(response, 'https://www.youtube.com/watch?v=YYgYRSkFoJs')
+        self.assertContains(response, 'example')
+
+    
+    def test_verify_page_request_for_nonexistent_video_returns_404(self):
+        response = self.client.get(reverse('video_details', kwargs={'video_pk':201})) # get request for video_details view for non-existent pk
+        self.assertEqual(404, response.status_code) # make sure response's status code is 404
 
