@@ -18,14 +18,12 @@ def add(request):
         if new_video_form.is_valid():
             try:
                 new_video_form.save()
-                return redirect('video_list')
-                #messages.info(request, 'Video added successfully')
+                return redirect('video_list')  # show success message or redirect to list of videos
+                # messages.info(request, 'Video added successfully')
             except ValidationError:
                 messages.warning(request, 'Invalid YouTube URL')
             except IntegrityError:
                 messages.warning(request, 'You already added that video.')
-
-            #todo show success message message or redirect to list of videos
 
         messages.warning(request, 'Please check the data entered.')
         return render(request, 'video_collection/add.html', {'new_video_form': new_video_form}) #redisplay data user typed in so they can make changes
